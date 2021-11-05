@@ -1,119 +1,108 @@
 
-//traces
-let traceLen = 10
-let traceDia = 20
 
 //ball
-let ballX = 120
-let ballY = 50
-let ballD = 50
-let speedX = 5
-let speedY = 5
+let ballD = 20
+let ballCount = 2
+let speedX = 6
+let speedY = 6
+
+//traces
+let traceLen = 20
+let traceDia = 20
 
 //board
-let boardSizeX = 120
-let boardSizeY = 10
-let boardGap = 50
+let myBoard
+let boardGap = 100
+let boardSizeX = 150
+let boardSizeY = 12
 
-let test = 33
-//traces
+//arrays
+let ballPos = []
 let traces = []
 
-//class ball
+//class board
+class Board {
+    constructor() {
+        this.boardX = mouseX
+        this.boardY = boardGap
+    }
+
+    newBoard() {
+        rect(this.boardX - boardSizeX/2, windowHeight - boardGap - boardSizeY, boardSizeX, boardSizeY)
+    }
+    updateBoard() {
+        this.boardX = mouseX
+    }
+}
+
+//class balls
 class Ball {
     constructor() {
-        this.ballX = random(width)
-        this.ballY = 50
+        this.ballX = random(20, width)
+        this.ballY = random(20, height/2)
+        this.speedX = speedX
+        this.speedY = speedY
     }
-    show() {
+    
+    drawBall() {
         ellipse(this.ballX, this.ballY, ballD)
     }
     checkPosition() {
         if(this.ballX - ballD/2  < 0 || this.ballX + ballD/2 > windowWidth) {
-        speedX = -speedX
+        this.speedX *= -1
         }
         if(this.ballY - ballD/2 < 0 || this.ballY + ballD/2 > windowHeight) {
-        speedY = -speedY
+        this.speedY *= -1
         }
     }
     updatePosition() {
-        this.ballX += speedX
-        this.ballY += speedY
+        this.ballX += this.speedX
+        this.ballY += this.speedY
+    }
+    pushTraces() {
+        traces.push({x: this.ballX, y: this.ballY})
+        if (traces.length > traceLen){
+            traces.shift()
+        }
+    }
+    drawTraces() {
+        for (let j = 0; j < traces.length; j += 1){
+            ellipse(traces[j].x + random(-3,3), traces[j].y + random(1,3), traceDia)
+        }   
     }
 }
-
-let ball1 = new Ball
-let ballTraces = []
-
-//class board
-class Board {
-    constructor(a) {
-        this.boardX = a
-        this.boardY = boardGap
-    }
-    show() {
-        rect(this.boardX, this.boardY, boardSizeX, boardSizeY)
-    }
-}
-
-let board1 = new Board
-
-
-
 
 
 function setup() {
     createCanvas(windowWidth, windowHeight);
-
-    //for (let i = 0; i < traceLen; i += 1) {
-    //    ballTraces.push(new Ball)
-    //}
+    
+    for (let i = 0; i < ballCount; i += 1) {
+        ballPos.push(new Ball())
+    }
+    
+    myBoard = new Board
 }
   
-
-
 
 function draw() {
 
     //hintergrund
     background(255)
 
+    //loop und methoden balls
+    for (let i = 0; i < ballPos.length; i += 1) {
+        ballPos[i].pushTraces()
+        ballPos[i].drawTraces()
+        ballPos[i].checkPosition()
+        ballPos[i].updatePosition()
+        //ballPos[i].drawBall()
+    }
 
-    ball1.show()
-    ball1.checkPosition()
-    ball1.updatePosition()
-
-
-    //traces speichern
-    //let traceX = ballX
-    //let traceY = ballY
-    //traces.push({x: traceX, y: traceY})
+    //methoden board
+    myBoard.newBoard()
+    myBoard.updateBoard()
     
-    //anzahl objekte beschränken
-    //if (traces.length > traceLen){
-    //   traces.shift()
-    //}
 
-    //traces zeichnen
-    //for (let i = 0; i < traces.length; i += 1){
-    //    ellipse(traces[i].x, traces[i].y, traceDia)
-    //}
-
-    //ball zeichnen
-    //ellipse(ballX, ballY, ballD)
-    //ballX = ballX + speedX
-    //ballY = ballY + speedY
-
-    //richtungswechsel
-    //if(ballX - ballD/2  < 0 || ballX + ballD/2 > windowWidth){
-    //    speedX = -speedX
-    //}
-    //if(ballY - ballD/2 < 0 || ballY + ballD/2 > windowHeight){
-    //    speedY = -speedY
-    //}
-
-    //board
-    //rect(mouseX - boardSizeX/2, windowHeight - boardGap - boardSizeY, boardSizeX, boardSizeY)
 
     //board_richtungswechsel
     //if(ballY > windowHeight - boardGap - boardSizeY - ballD/2 && ballX > mouseX - boardSizeX/2 && ballX < mouseX + boardSizeX/2){
