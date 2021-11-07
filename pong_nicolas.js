@@ -1,5 +1,6 @@
 
 //variables
+let a = 0
 let x
 let y
 let route // size
@@ -8,6 +9,7 @@ let traceLength // trace length
 let alpha // alpha
 let circleSize // circle size
 let traceSize // trace size
+let red = 255
 
 //arrays
 let lissajousArray = []
@@ -35,29 +37,31 @@ class Lissajous {
     }
     //kreise zeichnen
     drawCircle() {
-        fill(255, 255, 255);
+        fill(255, 0, 0);
+        noStroke()
         ellipse(this.x, this.y, this.circleSize)
     }
     //traces zeichnen
     drawTraces() {
         for (let i = 0; i < this.tracesArray.length; i++) {
-            fill(255,255,255,this.alpha)
-            ellipse(this.tracesArray[i].x, this.tracesArray[i].y, this.traceSize)
-            this.traceSize = i * 0.3
+            fill(red,0,0,this.alpha)
+            noStroke()
+            ellipse(this.tracesArray[i].x, this.tracesArray[i].y, this.traceSize)         
         }
     }
     //werte updaten
     update(r) {
         this.x = width / 2 + this.route * sin(3 * this.speed + PI / 2)
         this.y = height / 2 + this.route * sin(this.speed)
-        this.speed -= .02
+        this.speed -= .026
+        
     }
 }
 
 function setup() {
     createCanvas(400, 400);
-    for (let i = 0; i < 20; i++) {
-        lissajousArray.push(new Lissajous(i * 30 + 10, 75, 255, i * 1.5 + 5, i * 1.5 + 5))
+    for (let i = 1; i < 20; i++) {
+        lissajousArray.push(new Lissajous(i * 25 + 15, 5 * i + 100, 255 - i * 14, i * 1.2 + 2, i * 1 + 2))
     }
 }
 
@@ -68,6 +72,6 @@ function draw() {
         lissajousArray[i].update()
         lissajousArray[i].drawTraces()
         lissajousArray[i].saveTraces()
-        //lissajousArray[i].drawCircle()
-    }
+        lissajousArray[i].drawCircle()
+    }    
 }
