@@ -1,68 +1,73 @@
 
+//variables
 let x
 let y
-let t = 0
-let r
-let alpha = 255
-let circleSize = 5
-let tracesSize = 5
-let tracesArray = []
+let route // size
+let speed = 0 // speed
+let traceLength // trace length
+let alpha // alpha
+let circleSize // circle size
+let traceSize // trace size
 
-let lissy
-let lissy2
+//arrays
+let lissajousArray = []
 
 class Lissajous {
-    constructor(r) {
-        this.t = t
+    constructor(route, traceLength, alpha, circleSize, traceSize) {
+        
         this.x = x
         this.y = y
-        this.r = r
+        this.speed = speed
+        this.route = route
+        this.traceLength = traceLength
         this.alpha = alpha
+        this.circleSize = circleSize
+        this.traceSize = traceSize
+        this.tracesArray = []
     }
 
-    saveTraces() {
-        tracesArray.push({x: this.x, y: this.y, t: this.t})
-        if(tracesArray.length > 100) {
-            tracesArray.shift()
+    //positionen in array pushen
+    saveTraces() { 
+        this.tracesArray.push({x: this.x, y: this.y, t: this.speed})
+        if(this.tracesArray.length > this.traceLength) {
+            this.tracesArray.shift()
         }
     }
-
+    //kreise zeichnen
     drawCircle() {
         fill(255, 255, 255);
-        ellipse(this.x, this.y, circleSize, circleSize)
+        ellipse(this.x, this.y, this.circleSize)
     }
-
+    //traces zeichnen
     drawTraces() {
-        for (let i = 0; i < tracesArray.length; i++) {
+        for (let i = 0; i < this.tracesArray.length; i++) {
             fill(255,255,255,this.alpha)
-            ellipse(tracesArray[i].x, tracesArray[i].y, tracesSize, tracesSize)
+            ellipse(this.tracesArray[i].x, this.tracesArray[i].y, this.traceSize)
+            this.traceSize = i * 0.3
         }
     }
-
+    //werte updaten
     update(r) {
-        this.x = width / 2 + this.r * sin(3 * this.t + PI / 2)
-        this.y = height / 2 + this.r * sin(this.t)
-        this.t += .01
+        this.x = width / 2 + this.route * sin(3 * this.speed + PI / 2)
+        this.y = height / 2 + this.route * sin(this.speed)
+        this.speed -= .02
     }
 }
 
 function setup() {
-    createCanvas(500, 500);
-    
-    lissy = new Lissajous(200)
-    lissy2 = new Lissajous(150)
+    createCanvas(400, 400);
+    for (let i = 0; i < 20; i++) {
+        lissajousArray.push(new Lissajous(i * 30 + 10, 75, 255, i * 1.5 + 5, i * 1.5 + 5))
+    }
 }
 
 function draw() {
     background(0);
 
-    lissy.saveTraces()
-    lissy.update()
-    lissy.drawCircle()
-    lissy.drawTraces()
-
-    lissy2.saveTraces()
-    lissy2.update()
-    lissy2.drawCircle()
-    lissy2.drawTraces()
+    for (let i = 0; i < lissajousArray.length; i++) {
+        lissajousArray[i].update()
+        lissajousArray[i].drawTraces()
+        lissajousArray[i].saveTraces()
+        //lissajousArray[i].drawCircle()
+    }
 }
