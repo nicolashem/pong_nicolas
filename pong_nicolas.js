@@ -39,16 +39,18 @@ class Lissajous {
     }
     //kreise zeichnen
     drawCircle() {
-        fill(255, 0, 0);
+        fill(red, green, blue);
         noStroke()
-        ellipse(this.x, this.y, this.circleSize)
+        rectMode(CENTER)
+        rect(this.x, this.y, this.circleSize-3)
     }
     //traces zeichnen
     drawTraces() {
-        for (let i = 0; i < this.tracesArray.length; i++) {
+        for (let i = 1; i < this.tracesArray.length; i++) {
             fill(red, green, blue,this.alpha)
             noStroke()
-            ellipse(this.tracesArray[i].x, this.tracesArray[i].y, this.traceSize)         
+            ellipse(this.tracesArray[i].x, this.tracesArray[i].y, this.traceSize)  
+            this.traceSize = i/12       
         }
     }
     //werte updaten
@@ -62,7 +64,7 @@ class Lissajous {
 function setup() {
     createCanvas(400, 400);
     for (let i = 1; i < 20; i++) {
-        lissajousArray.push(new Lissajous(i * 25 + 15, 5 * i + 100, 255 - i * 14, i * 1.2 + 2, i * 1 + 2))
+        lissajousArray.push(new Lissajous(i * 25 + 15, 7 * i + 100, 255 - i * 14, i * 1.2 + 2, i * 1 + 2))
     }
 }
 
