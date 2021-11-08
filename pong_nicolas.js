@@ -40,7 +40,7 @@ class Lissajous {
     //kreise zeichnen
     drawCircle() {
         fill(red, green, blue);
-        stroke(.01)
+        stroke(0)
         rectMode(CENTER)
         rect(this.x, this.y, this.circleSize-3)
     }
@@ -48,7 +48,7 @@ class Lissajous {
     drawTraces() {
         for (let i = 1; i < this.tracesArray.length; i++) {
             fill(red, green, blue,this.alpha)
-            //noStroke()
+            noStroke()
             ellipse(this.tracesArray[i].x, this.tracesArray[i].y, this.traceSize)  
             this.traceSize = i/12       
         }
@@ -58,6 +58,7 @@ class Lissajous {
         this.x = width / 2 + this.route * sin(3 * this.speed + PI / 2)
         this.y = height / 2 + this.route * sin(this.speed)
         this.speed -= .026
+        this.traceSize = 0
     }
 }
 
