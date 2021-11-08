@@ -1,6 +1,6 @@
 
 //variables
-let a = 0
+
 let x
 let y
 let route // size
@@ -9,7 +9,9 @@ let traceLength // trace length
 let alpha // alpha
 let circleSize // circle size
 let traceSize // trace size
-let red = 255
+let red = 255 //color
+let green = 0
+let blue = 0
 
 //arrays
 let lissajousArray = []
@@ -44,7 +46,7 @@ class Lissajous {
     //traces zeichnen
     drawTraces() {
         for (let i = 0; i < this.tracesArray.length; i++) {
-            fill(red,0,0,this.alpha)
+            fill(red, green, blue,this.alpha)
             noStroke()
             ellipse(this.tracesArray[i].x, this.tracesArray[i].y, this.traceSize)         
         }
@@ -54,7 +56,6 @@ class Lissajous {
         this.x = width / 2 + this.route * sin(3 * this.speed + PI / 2)
         this.y = height / 2 + this.route * sin(this.speed)
         this.speed -= .026
-        
     }
 }
 
@@ -72,6 +73,11 @@ function draw() {
         lissajousArray[i].update()
         lissajousArray[i].drawTraces()
         lissajousArray[i].saveTraces()
-        lissajousArray[i].drawCircle()
+        //lissajousArray[i].drawCircle()
     }    
+}
+
+function mousePressed() {
+    green = random(0,255)
+    blue = random(0,255)
 }
