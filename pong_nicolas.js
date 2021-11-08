@@ -1,86 +1,97 @@
 
-//variables
-
-let x
-let y
-let route // size
-let speed = 0 // speed
-let traceLength // trace length
-let alpha // alpha
-let circleSize // circle size
-let traceSize // trace size
-let red = 255 //color
-let green = 0
-let blue = 0
-
 //arrays
+let phenomena = []
 let lissajousArray = []
 
-class Lissajous {
-    constructor(route, traceLength, alpha, circleSize, traceSize) {
-        
-        this.x = x
-        this.y = y
+//variables
+let speed = 0.1
+let traceSize = 2
+let traceLength = 35
+
+let red = 255
+let blue = 255
+let green = 255
+
+///////////////////////////////////////////////////
+//////////////////////////////////CLASSES//////////
+
+//class grid
+class Phenomenon {
+    constructor(posX, posY, sizeFactor) {
+        this.pos = {x: posX, y: posY}
+        this.numAttributes = 1
+        this.sizeFactor = sizeFactor
+        this.attributes = []
+        for (let i = 1; i < 9; i++) {
+            this.attributes.push(new Attribute(0, 0, i * 9))
+        }
+    }
+    show() {
+        push()
+        translate(this.pos.x, this.pos.y)
+        for (let attribute of this.attributes) {
+            attribute.show()
+        }
+        pop()
+    }
+}
+
+//class lissajous
+class Attribute {
+    constructor(posX, posY, sizeFactor) {
+        this.pos = {x: posX, y: posY}
+
         this.speed = speed
-        this.route = route
+        this.sizeFactor = sizeFactor
+
         this.traceLength = traceLength
-        this.alpha = alpha
-        this.circleSize = circleSize
         this.traceSize = traceSize
         this.tracesArray = []
     }
-
-    //positionen in array pushen
-    saveTraces() { 
+    show() {
+        push()
+        translate(50,50)
+        this.x = this.pos.x + this.sizeFactor * sin(3 * this.speed + PI / 2)
+        this.y = this.pos.y + this.sizeFactor * sin(this.speed)
+        this.speed -= 0.03
+        this.traceSize = 0
         this.tracesArray.push({x: this.x, y: this.y, t: this.speed})
+
         if(this.tracesArray.length > this.traceLength) {
             this.tracesArray.shift()
         }
-    }
-    //kreise zeichnen
-    drawCircle() {
-        fill(red, green, blue);
-        stroke(0)
-        rectMode(CENTER)
-        rect(this.x, this.y, this.circleSize-3)
-    }
-    //traces zeichnen
-    drawTraces() {
+
         for (let i = 1; i < this.tracesArray.length; i++) {
             fill(red, green, blue,this.alpha)
             noStroke()
-            ellipse(this.tracesArray[i].x, this.tracesArray[i].y, this.traceSize)  
-            this.traceSize = i/12       
+            ellipse(this.tracesArray[i].x, this.tracesArray[i].y, this.traceSize) 
+            this.traceSize = i/12 
         }
+        pop()
     }
-    //werte updaten
-    update(r) {
-        this.x = width / 2 + this.route * sin(3 * this.speed + PI / 2)
-        this.y = height / 2 + this.route * sin(this.speed)
-        this.speed -= .026
-        this.traceSize = 0
-    }
-}
+}  
+
+///////////////////////////////////////////////////
+//////////////////////////////////SETUP////////////
 
 function setup() {
-    createCanvas(400, 400);
-    for (let i = 1; i < 20; i++) {
-        lissajousArray.push(new Lissajous(i * 25 + 15, 7 * i + 100, 255 - i * 14, i * 1.2 + 2, i * 1 + 2))
+    createCanvas(400, 400)
+    noFill()
+
+    for (let i = 0; i < 400; i += 100) {
+        for (let j = 0; j < 400; j += 100) {
+        phenomena.push(new Phenomenon(i, j, i*0.1))
+        }
     }
 }
 
+///////////////////////////////////////////////////
+///////////////////////////////////DRAW////////////
+
 function draw() {
-    background(0);
+    background(0)
 
-    for (let i = 0; i < lissajousArray.length; i++) {
-        lissajousArray[i].update()
-        lissajousArray[i].drawTraces()
-        lissajousArray[i].saveTraces()
-        //lissajousArray[i].drawCircle()
-    }    
-}
-
-function mousePressed() {
-    green = random(0,255)
-    blue = random(0,255)
+    for (let phenomenon of phenomena) {
+        phenomenon.show()
+    }
 }
